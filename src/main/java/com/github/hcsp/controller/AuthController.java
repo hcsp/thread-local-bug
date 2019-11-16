@@ -47,7 +47,6 @@ public class AuthController {
     public LoginResult logout() {
         SecurityContextHolder.clearContext();
 
-
         Optional<User> currentUser = UserContext.getCurrentUser();
         UserContext.removeCurrentUser();
 
