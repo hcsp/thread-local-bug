@@ -1,6 +1,7 @@
 package com.github.hcsp.controller;
 
 import com.github.hcsp.entity.LoginResult;
+import com.github.hcsp.entity.User;
 import com.github.hcsp.service.UserContext;
 import com.github.hcsp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class AuthController {
@@ -45,9 +47,11 @@ public class AuthController {
     public LoginResult logout() {
         SecurityContextHolder.clearContext();
 
-        UserContext.getCurrentUser();
+
+        Optional<User> currentUser = UserContext.getCurrentUser();
         UserContext.removeCurrentUser();
-        return UserContext.getCurrentUser()
+
+        return currentUser
                 .map(user -> LoginResult.success("success", false))
                 .orElse(LoginResult.failure("用户没有登录"));
     }
