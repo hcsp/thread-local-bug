@@ -14,7 +14,6 @@ public class UserContext {
         return Optional.ofNullable(currentUser.get());
     }
 
-
     public static void removeCurrentUser() {
          currentUser.remove();
     }
