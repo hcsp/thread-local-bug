@@ -8,8 +8,9 @@ public class UserContext {
     public static ThreadLocal<User> currentUser = new ThreadLocal<>();
 
     public static void setCurrentUser(User user) {
-       currentUser.set(user);
+        currentUser.set(user);
     }
+
     public static Optional<User> getCurrentUser() {
         return Optional.ofNullable(currentUser.get());
     }
@@ -17,5 +18,4 @@ public class UserContext {
     public static void removeCurrentUser() {
          currentUser.remove();
     }
-
 }

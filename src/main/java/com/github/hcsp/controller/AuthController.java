@@ -99,7 +99,9 @@ public class AuthController {
             //   Cookie
             SecurityContextHolder.getContext().setAuthentication(token);
 
-            return LoginResult.success("登录成功", userService.getUserByUsername(username));
+            User user = userService.getUserByUsername(username);
+            UserContext.setCurrentUser(user);
+            return LoginResult.success("登录成功", user);
         } catch (BadCredentialsException e) {
             return LoginResult.failure("密码不正确");
         }

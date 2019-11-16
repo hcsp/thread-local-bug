@@ -22,9 +22,9 @@ public class UserContextInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication!=null) {
+        if (authentication != null) {
             User user = userService.getUserByUsername(authentication.getName());
-            if(user!=null) {
+            if (user != null) {
                 UserContext.setCurrentUser(user);
             }
         }
