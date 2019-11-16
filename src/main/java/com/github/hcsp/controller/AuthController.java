@@ -44,11 +44,12 @@ public class AuthController {
     @ResponseBody
     public LoginResult logout() {
         SecurityContextHolder.clearContext();
-        LoginResult loginResult = UserContext.getCurrentUser()
+
+        UserContext.getCurrentUser();
+        UserContext.removeCurrentUser();
+        return UserContext.getCurrentUser()
                 .map(user -> LoginResult.success("success", false))
                 .orElse(LoginResult.failure("用户没有登录"));
-        UserContext.removeuser();
-        return loginResult;
     }
 
     @PostMapping("/auth/register")
