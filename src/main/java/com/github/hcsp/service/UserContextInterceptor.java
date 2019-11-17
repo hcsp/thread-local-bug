@@ -31,9 +31,4 @@ public class UserContextInterceptor implements HandlerInterceptor {
         UserContext.removeCurrentUser();
         return true;
     }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        UserContext.currentUser.remove();
-    }
 }
