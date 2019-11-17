@@ -45,7 +45,6 @@ public class AuthController {
     @ResponseBody
     public LoginResult logout() {
         SecurityContextHolder.clearContext();
-        UserContext.removeUser();
         return UserContext.getCurrentUser()
                 .map(user -> LoginResult.success("success", false))
                 .orElse(LoginResult.failure("用户没有登录"));
