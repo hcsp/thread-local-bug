@@ -14,15 +14,8 @@ public class UserContext {
     public static Optional<User> getCurrentUser() {
         return Optional.ofNullable(currentUser.get());
     }
-<<<<<<< HEAD
-
     public static void removeCurrentUser() {
          currentUser.remove();
     }
 
-=======
-    public static void cleanCurrentUser(){
-        currentUser.remove();
-    }
->>>>>>> cc7ba7d... fix ThreadLocal 脏数据问题 (#6)
 }
