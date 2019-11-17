@@ -5,7 +5,7 @@ import com.github.hcsp.entity.User;
 import java.util.Optional;
 
 public class UserContext {
-    private static ThreadLocal<User> currentUser = new ThreadLocal<>();
+    public static ThreadLocal<User> currentUser = new ThreadLocal<>();
 
     public static void setCurrentUser(User user) {
         currentUser.set(user);
@@ -18,4 +18,5 @@ public class UserContext {
     public static void removeCurrentUser() {
          currentUser.remove();
     }
+
 }
