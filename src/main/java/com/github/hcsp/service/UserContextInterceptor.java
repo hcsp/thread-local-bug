@@ -28,11 +28,8 @@ public class UserContextInterceptor implements HandlerInterceptor {
                 UserContext.setCurrentUser(user);
             }
         }
-        return true;
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        // 请求之前初始化一下
         UserContext.removeUser();
+        return true;
     }
 }
