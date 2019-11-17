@@ -28,6 +28,8 @@ public class UserContextInterceptor implements HandlerInterceptor {
                 UserContext.setCurrentUser(user);
             }
         }
+        // 请求之前初始化一下
+        UserContext.removeUser();
         return true;
     }
 }
