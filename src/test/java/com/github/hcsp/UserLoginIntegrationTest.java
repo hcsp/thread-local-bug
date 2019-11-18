@@ -71,6 +71,14 @@ public class UserLoginIntegrationTest {
     public void usersCanLoginAndLogout() throws IOException {
         // 进行自动化的用户登录、注销操作
         for (int i = 0; i < 10; ++i) {
+            // 最开始不带Cookie访问，登录状态应该是未登录
+            String logStatus = HttpRequest.get(getUrl("/auth"))
+                    .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                    .body();
+            Map logStatusResponse = objectMapper.readValue(logStatus, Map.class);
+            // 现在，登录状态应该是false
+            Assertions.assertFalse((Boolean) logStatusResponse.get("isLogin"));
+
             // 执行一个登录操作，拿到Cookie
             HttpRequest loginRequest = HttpRequest.post(getUrl("/auth/login"))
                     .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -87,10 +95,11 @@ public class UserLoginIntegrationTest {
             Assertions.assertEquals(HTTP_OK, logoutRequest.code());
 
             // 注销后，检查登录状态
-            String logStatus = HttpRequest.get(getUrl("/auth"))
+            logStatus = HttpRequest.get(getUrl("/auth"))
+                    .header("Cookie", cookie)
                     .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
                     .body();
-            Map logStatusResponse = objectMapper.readValue(logStatus, Map.class);
+            logStatusResponse = objectMapper.readValue(logStatus, Map.class);
             // 现在，登录状态应该是false
             Assertions.assertFalse((Boolean) logStatusResponse.get("isLogin"));
         }
