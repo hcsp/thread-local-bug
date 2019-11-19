@@ -28,9 +28,6 @@ public class UserContextInterceptor implements HandlerInterceptor {
                 UserContext.setCurrentUser(user);
             }
         }
-
-        UserContext.removeCurrentUser();
         return true;
     }
-
 }
