@@ -49,7 +49,6 @@ public class AuthController {
 
         Optional<User> currentUser = UserContext.getCurrentUser();
         UserContext.removeCurrentUser();
-
         return currentUser
                 .map(user -> LoginResult.success("success", false))
                 .orElse(LoginResult.failure("用户没有登录"));
