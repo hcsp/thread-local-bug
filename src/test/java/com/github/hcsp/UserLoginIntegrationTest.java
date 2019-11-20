@@ -2,6 +2,7 @@ package com.github.hcsp;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.hcsp.entity.Result;
 import com.github.kevinsawicki.http.HttpRequest;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.ClassicConfiguration;
@@ -70,14 +71,10 @@ public class UserLoginIntegrationTest {
     @Test
     public void usersCanLoginAndLogout() throws IOException {
         // 进行自动化的用户登录、注销操作
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 20; ++i) {
             // 最开始不带Cookie访问，登录状态应该是未登录
-            String logStatus = HttpRequest.get(getUrl("/auth"))
-                    .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                    .body();
-            Map logStatusResponse = objectMapper.readValue(logStatus, Map.class);
-            // 现在，登录状态应该是false
-            Assertions.assertFalse((Boolean) logStatusResponse.get("isLogin"));
+            assertLogInStatus(null, false);
+            assertLogInStatus(null, false);
 
             // 执行一个登录操作，拿到Cookie
             HttpRequest loginRequest = HttpRequest.post(getUrl("/auth/login"))
@@ -86,22 +83,35 @@ public class UserLoginIntegrationTest {
                     .send(getUserNameAndPasswordJsonString("test", "test"));
             String cookie = loginRequest.headers().get("Set-Cookie").get(0);
 
+            // 检查登录状态，应该是true
+            assertLogInStatus(cookie, true);
+
             // 执行一个注销操作
             HttpRequest logoutRequest = HttpRequest.get(getUrl("/auth/logout"))
                     .header("Cookie", cookie)
                     .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                     .accept(MediaType.APPLICATION_JSON_UTF8_VALUE);
+            Map logoutResponse = objectMapper.readValue(loginRequest.body(), Map.class);
             // 断言注销操作成功
             Assertions.assertEquals(HTTP_OK, logoutRequest.code());
+            Assertions.assertEquals(Result.ResultStatus.OK.getStatus(), logoutResponse.get("status"));
 
             // 注销后，检查登录状态
-            logStatus = HttpRequest.get(getUrl("/auth"))
-                    .header("Cookie", cookie)
-                    .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                    .body();
-            logStatusResponse = objectMapper.readValue(logStatus, Map.class);
             // 现在，登录状态应该是false
-            Assertions.assertFalse((Boolean) logStatusResponse.get("isLogin"));
+            assertLogInStatus(cookie, false);
+            assertLogInStatus(cookie, false);
         }
+    }
+
+    // 检查用户当前的登录状态
+    private void assertLogInStatus(String cookie, boolean status) throws IOException {
+        String logStatus = HttpRequest.get(getUrl("/auth"))
+                .header("Cookie", cookie)
+                .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .body();
+        Map logStatusResponse = objectMapper.readValue(logStatus, Map.class);
+        // 现在，登录状态应该是false
+        Assertions.assertEquals(status, logStatusResponse.get("isLogin"));
+        Assertions.assertEquals(Result.ResultStatus.OK.getStatus(), logStatusResponse.get("status"));
     }
 }

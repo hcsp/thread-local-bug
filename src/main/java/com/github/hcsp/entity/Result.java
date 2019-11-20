@@ -10,6 +10,10 @@ public abstract class Result<T> {
         ResultStatus(String status) {
             this.status = status;
         }
+
+        public String getStatus() {
+            return status;
+        }
     }
 
     ResultStatus status;
