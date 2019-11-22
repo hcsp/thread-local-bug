@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 public class AuthController {
@@ -46,10 +45,7 @@ public class AuthController {
     @ResponseBody
     public LoginResult logout() {
         SecurityContextHolder.clearContext();
-
-        Optional<User> currentUser = UserContext.getCurrentUser();
-        UserContext.removeCurrentUser();
-        return currentUser
+        return UserContext.getCurrentUser()
                 .map(user -> LoginResult.success("success", false))
                 .orElse(LoginResult.failure("用户没有登录"));
     }
