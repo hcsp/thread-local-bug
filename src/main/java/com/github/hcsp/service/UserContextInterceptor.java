@@ -26,9 +26,6 @@ public class UserContextInterceptor implements HandlerInterceptor {
             User user = userService.getUserByUsername(authentication.getName());
             if (user != null) {
                 UserContext.setCurrentUser(user);
-            } else {
-                // If it's an anonymousUser, clear the old user's context associated with this thread
-                UserContext.clearOldUser();
             }
         }
         return true;
