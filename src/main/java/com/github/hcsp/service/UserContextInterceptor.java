@@ -26,8 +26,6 @@ public class UserContextInterceptor implements HandlerInterceptor {
             User user = userService.getUserByUsername(authentication.getName());
             if (user != null) {
                 UserContext.setCurrentUser(user);
-            } else {
-                UserContext.remove();
             }
         }
         return true;
