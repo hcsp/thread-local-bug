@@ -30,4 +30,11 @@ public class UserContextInterceptor implements HandlerInterceptor {
         }
         return true;
     }
+
+    //请求之后
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+            throws Exception {
+        UserContext.removeCurrentUser();   //请求完之后就要释放资源
+    }
 }
